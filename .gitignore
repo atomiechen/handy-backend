@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+.DS_Store
+
+# log files and intermidiate files
+*.log*
+*.pid
+*.out
+*.fifo
+.var
