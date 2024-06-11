@@ -29,7 +29,7 @@ check() {
   # Read the process ID
   PID=$(cat $PID_FILE)
   # show process info
-  ps -f -p $PID --ppid $PID
+  ps axo user,uid,pid,ppid,rss,stime,tty,time,command | awk -v pid=$PID 'NR==1 || $3 == pid || $4 == pid'
   if [ $? -ne 0 ]; then
     printf "${LIGHT_RED}$PROCESS_NAME process is not running (should be at PID $PID)${NC}\n"
     return 1
