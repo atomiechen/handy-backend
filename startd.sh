@@ -4,6 +4,8 @@
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 
+# you may need to change these
+PYTHON_CMD=python
 LOG_ROTATION_PY=rotatelog.py
 
 # dirs
@@ -76,7 +78,7 @@ check_start_status() {
 }
 
 # start log rotation
-nohup python -u $LOG_ROTATION_PY --fifo-path $FIFO_PATH --log-path $LOG_PATH --max-log-size $MAX_LOG_SIZE >> $ROTATE_FILE 2>&1 &
+nohup $PYTHON_CMD -u $LOG_ROTATION_PY --fifo-path $FIFO_PATH --log-path $LOG_PATH --max-log-size $MAX_LOG_SIZE >> $ROTATE_FILE 2>&1 &
 # write PID to file
 echo $! > $PID_ROTATE_FILE
 # check if log rotation is running
