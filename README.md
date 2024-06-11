@@ -11,7 +11,7 @@ A template with handy scripts to test and run programs as a daemon in the backgr
 
 `./start.sh`: Run the command in the terminal.
 
-`./startd.sh`: Run the command as a daemon process in the background (stop it if already running), and also start log rotation using `rotatelog.py`. This script is dependent on `start.sh`, `stopd.sh`, and `rotatelog.py`.
+`./startd.sh`: Run the command as a daemon process in the background (return if already running), and also start log rotation using `rotatelog.py`. This script is dependent on `start.sh` and `rotatelog.py`.
 
 - both processes are run in the background with their PIDs stored in `.vars/server.pid` and `.vars/rotate.pid`, and they communicate using a fifo file `.vars/.fifo`. **Do NOT manually modify or delete these files.**
 - server logs are stored in `logs/server.log` and rotated every 5MB (can be changed in `startd.sh`)
