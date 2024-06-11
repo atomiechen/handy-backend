@@ -29,11 +29,13 @@ check() {
   # Read the process ID
   PID=$(cat $PID_FILE)
   # show process info
-  ps axo user,uid,pid,ppid,rss,stime,tty,time,command | awk -v pid=$PID 'NR==1 || $3 == pid || $4 == pid'
-  if [ $? -ne 0 ]; then
+  output=$(ps axo user,uid,pid,ppid,rss,stime,tty,time,command | awk -v pid=$PID 'NR==1 || $3 == pid || $4 == pid')
+  line_count=$(echo "$output" | awk 'NR > 1' | wc -l)
+  if [ $line_count -eq 0 ]; then
     printf "${LIGHT_RED}$PROCESS_NAME process is not running (should be at PID $PID)${NC}\n"
     return 1
   else
+    echo "$output"
     printf "${LIGHT_CYAN}$PROCESS_NAME process is running with PID ${LIGHT_RED}$PID${NC}\n"
   fi
 }
