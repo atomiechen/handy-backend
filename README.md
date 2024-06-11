@@ -1,5 +1,7 @@
 # Handy Backend
 
+A template with handy scripts to test and run programs as a daemon in the background, with logs and log rotation built-in.
+
 ## Setup
 
 Open `start.sh` and modify `CMD` to set the command to run.
