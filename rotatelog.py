@@ -22,7 +22,6 @@ def signal_handler(signum, frame):
 # Set up signal handlers
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
-signal.signal(signal.SIGKILL, signal_handler)
 
 def make_file_dir(file_path):
     par_dir = get_file_dir(file_path)
