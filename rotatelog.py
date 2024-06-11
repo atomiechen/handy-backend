@@ -2,8 +2,27 @@ import os
 import stat
 from datetime import datetime
 import argparse
-from loguru import logger
+import logging
+import sys
+import signal
 
+
+# Configure logging
+logging.basicConfig(
+    format='%(asctime)s.%(msecs)03d - %(process)d - %(levelname)s - %(message)s', 
+    level=logging.INFO, 
+    datefmt='%Y-%m-%d %H:%M:%S', 
+)
+logger = logging.getLogger("rotatelog")
+
+def signal_handler(signum, frame):
+    logger.info(f"Received signal {signum}, shutting down.")
+    sys.exit(0)
+
+# Set up signal handlers
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGKILL, signal_handler)
 
 def make_file_dir(file_path):
     par_dir = get_file_dir(file_path)
@@ -40,7 +59,15 @@ def rotate_log(log_path):
     else:
         os.rename(log_path, new_name)
 
-@logger.catch
+def catch_exception(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger.exception(f"Exception in {func.__name__}: {e}")
+    return wrapper
+
+@catch_exception
 def main(fifo_path, log_path, max_log_size):
     logger.info(f"Process ID: {os.getpid()} start writing log files and rotating")
     check_fifo(fifo_path)
@@ -73,3 +100,4 @@ if __name__ == "__main__":
     parser.add_argument("--max-log-size", help="Max log file size (MB)", type=int, required=True)
     args = parser.parse_args()
     main(args.fifo_path, args.log_path, args.max_log_size * 1024 * 1024)
+    logger.info("Process finished.")
