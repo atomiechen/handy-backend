@@ -39,9 +39,6 @@ LIGHT_RED='\033[1;31m'
 LIGHT_CYAN='\033[1;36m'
 NC='\033[0m'
 
-# stop server
-. ./stopd.sh
-
 # if PID file exits, exit
 check_pid() {
     local PID_FILE=$1
