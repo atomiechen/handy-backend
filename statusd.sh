@@ -1,4 +1,7 @@
 #!/bin/bash
+# Author: Atomie CHEN (atomic_cwh@163.com)
+# Repository: https://github.com/atomiechen/handy-backend
+# License: MIT
 
 # dirs (relative paths are based on location of this script)
 VAR_DIR=.var

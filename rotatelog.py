@@ -1,3 +1,7 @@
+# Author: Atomie CHEN (atomic_cwh@163.com)
+# Repository: https://github.com/atomiechen/handy-backend
+# License: MIT
+
 import os
 import stat
 from datetime import datetime

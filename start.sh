@@ -1,4 +1,8 @@
 #!/bin/bash
+# Author: Atomie CHEN (atomic_cwh@163.com)
+# Repository: https://github.com/atomiechen/handy-backend
+# License: MIT
+
 
 ######## BEGIN SETTINGS ########
 # optional: add custom setup here (change directory, activate virtual environment, etc.)
