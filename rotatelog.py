@@ -3,17 +3,26 @@ import stat
 from datetime import datetime
 import argparse
 import logging
+from logging.handlers import RotatingFileHandler
 import sys
 import signal
 
 
-# Configure logging
-logging.basicConfig(
-    format='%(asctime)s.%(msecs)03d - %(process)d - %(levelname)s - %(message)s', 
-    level=logging.INFO, 
-    datefmt='%Y-%m-%d %H:%M:%S', 
-)
 logger = logging.getLogger("rotatelog")
+
+class FixedSizeRotatingFileHandler(RotatingFileHandler):
+    def __init__(self, filename, maxBytes):
+        super().__init__(filename, maxBytes=maxBytes)
+
+    def doRollover(self):
+        if self.stream:
+            self.stream.close()
+            self.stream = None
+        # Create timestamped filename for the rollover logs
+        current_time = datetime.now().strftime('.%Y%m%d-%H:%M:%S')
+        self.rotate(self.baseFilename, self.baseFilename + current_time)
+        self.stream = self._open()
+
 
 def signal_handler(signum, frame):
     logger.info(f"Received signal {signum}, shutting down.")
@@ -88,8 +97,18 @@ def catch_exception(func):
     return wrapper
 
 @catch_exception
-def main(fifo_path, log_path, max_log_size):
-    logger.info(f"Process ID: {os.getpid()} start writing log files and rotating")
+def main(fifo_path, log_path, max_log_size, rotation_log_path, max_rotation_log_size):
+    # Configure logging
+    rh = None
+    if rotation_log_path:
+        rh = FixedSizeRotatingFileHandler(rotation_log_path, maxBytes=max_rotation_log_size)
+    logging.basicConfig(
+        format='%(asctime)s.%(msecs)03d - %(process)d - %(levelname)s - %(message)s', 
+        level=logging.INFO, 
+        datefmt='%Y-%m-%d %H:%M:%S', 
+        handlers=[rh] if rh else None, 
+    )
+    logger.info(f"Start logging and rotating: {log_path=} {max_log_size=} {rotation_log_path=} {max_rotation_log_size=}")
     if fifo_path:
         logger.info(f"Reading from FIFO: {fifo_path}")
         check_fifo(fifo_path)
@@ -106,6 +125,8 @@ if __name__ == "__main__":
     parser.add_argument("--fifo-path", help="FIFO file path; if not provided, read from stdin", default=None)
     parser.add_argument("--log-path", help="Log file path", required=True)
     parser.add_argument("--max-log-size", help="Max log file size (MB); 0 for no rotation", type=int, required=True)
+    parser.add_argument("--rotation-log-path", help="Path of the log output of this rotation process; if not provided, output to stdout", default=None)
+    parser.add_argument("--max-rotation-log-size", help="Max file size (MB) for this rotation log; 0 for no rotation", type=int, default=5)
     args = parser.parse_args()
-    main(args.fifo_path, args.log_path, args.max_log_size * 1024 * 1024)
+    main(args.fifo_path, args.log_path, args.max_log_size * 1024 * 1024, args.rotation_log_path, args.max_rotation_log_size * 1024 * 1024)
     logger.info("Process finished.")
