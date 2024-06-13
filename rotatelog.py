@@ -51,10 +51,9 @@ def rotate_log(log_path):
     current_time = datetime.now().strftime('.%Y%m%d-%H:%M:%S')
     new_name = log_path + current_time
     make_file_dir(new_name)
-    logger.info(f"rotating {log_path} to {new_name}")
+    logger.info(f"Rotating {log_path} to {new_name}")
     if os.path.exists(new_name):
-        # os.remove(new_name)
-        logger.info(f"{new_name} already exists, skip renaming")
+        logger.warning(f"{new_name} already exists, skip renaming")
     else:
         os.rename(log_path, new_name)
 
@@ -87,6 +86,9 @@ def main(fifo_path, log_path, max_log_size):
                             # rotation is needed; if so, break the loop
                             if byte == b'\n' and need_rotate(log_path, max_log_size):
                                 break
+                        else:
+                            logger.info(f"Read EOF, now closing...")
+                            return
                     except Exception as e:
                         logger.exception(f"Exception in while loop: {e}")
             rotate_log(log_path)  # rotate log file
