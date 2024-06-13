@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# change to the directory where the script is located
-CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
-cd $CURRENT_DIR
-
 ######## BEGIN SETTINGS ########
 # Note: relative paths are based on location of this script
 # log directory
@@ -39,6 +35,10 @@ FIFO_PATH=$VAR_DIR/.fifo
 LIGHT_RED='\033[1;31m'
 LIGHT_CYAN='\033[1;36m'
 NC='\033[0m'
+
+# change to the directory where the script is located
+CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
+cd $CURRENT_DIR
 
 # test if python is installed
 if ! command -v $PYTHON_CMD &> /dev/null; then

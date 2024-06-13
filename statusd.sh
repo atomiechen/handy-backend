@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# change to the directory where the script is located
-CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
-cd $CURRENT_DIR
-
 # dirs (relative paths are based on location of this script)
 VAR_DIR=.var
 
@@ -15,6 +11,10 @@ PID_ROTATE_FILE=$VAR_DIR/rotate.pid
 LIGHT_RED='\033[1;31m'
 LIGHT_CYAN='\033[1;36m'
 NC='\033[0m'
+
+# change to the directory where the script is located
+CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
+cd $CURRENT_DIR
 
 check() {
   local PID_FILE=$1

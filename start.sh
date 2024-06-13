@@ -1,14 +1,17 @@
 #!/bin/bash
 
-# change to the directory where the script is located
-CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
-cd $CURRENT_DIR
-
+######## BEGIN SETTINGS ########
 # optional: add custom setup here (change directory, activate virtual environment, etc.)
 
 
 # CHANGE THIS: the actual command you want to run
 CMD=""
+######## END SETTINGS ########
+
+
+# change to the directory where the script is located
+CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
+cd $CURRENT_DIR
 
 # check if CMD is set
 LIGHT_RED='\033[1;31m'
