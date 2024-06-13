@@ -4,7 +4,7 @@
 # License: MIT
 
 
-######## BEGIN SETTINGS ########
+# -------- BEGIN SETTINGS --------
 # optional: add custom setup here
 
 # # change to the directory where the script is located
@@ -16,7 +16,7 @@
 
 # CHANGE THIS: the actual command you want to run
 CMD=""
-######## END SETTINGS ########
+# -------- END SETTINGS --------
 
 
 # check if CMD is set

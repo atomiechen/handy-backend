@@ -4,26 +4,26 @@
 # License: MIT
 
 
-######## BEGIN SETTINGS ########
+# -------- BEGIN SETTINGS --------
 # Note: relative paths are based on location of this script
 # log directory
 LOG_DIR=logs
-# --------------------
+# ---
 # log file (will be rotated)
 LOG_PATH=$LOG_DIR/server.log
 # max log size in MB
 MAX_LOG_SIZE=5
-# --------------------
+# ---
 # log file of log rotation script (will be rotated)
 ROTATE_FILE=$LOG_DIR/rotate.log
 # max log size for rotation output in MB
 MAX_ROTATION_LOG_SIZE=5
-# --------------------
+# ---
 # python executable used to run log rotation script
 PYTHON_CMD=python
 # log rotation script
 LOG_ROTATION_PY=rotatelog.py
-######## END SETTINGS ########
+# -------- END SETTINGS --------
 
 
 # [!IMPORTANT] do not manually change these files
