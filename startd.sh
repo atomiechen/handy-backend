@@ -4,30 +4,23 @@
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 
-# you may need to change these
-PYTHON_CMD=python
-LOG_ROTATION_PY=rotatelog.py
-
-# dirs
-VAR_DIR=.var
+# you may need to CHANGE THESE (relative paths are based on location of this script)
+# log directory
 LOG_DIR=logs
-
-# create VAR_DIR or LOG_DIR if not exists
-if [ ! -d "$VAR_DIR" ]; then
-    mkdir -p $VAR_DIR
-fi
-if [ ! -d "$LOG_DIR" ]; then
-    mkdir -p $LOG_DIR
-fi
-
 # log file (will be rotated)
 LOG_PATH=$LOG_DIR/server.log
+# log of log rotation script
+ROTATE_FILE=$LOG_DIR/rotate.log
 # max log size in MB
 MAX_LOG_SIZE=5
-# log of log rotation
-ROTATE_FILE=$LOG_DIR/rotate.log
+# python executable used to run log rotation script
+PYTHON_CMD=python
+# log rotation script
+LOG_ROTATION_PY=rotatelog.py
 
 # [!IMPORTANT] do not manually change these files
+# dir for PID files and other stuff
+VAR_DIR=.var
 # PID files of server and log rotation
 PID_FILE=$VAR_DIR/server.pid
 PID_ROTATE_FILE=$VAR_DIR/rotate.pid
@@ -38,6 +31,14 @@ FIFO_PATH=$VAR_DIR/.fifo
 LIGHT_RED='\033[1;31m'
 LIGHT_CYAN='\033[1;36m'
 NC='\033[0m'
+
+# create VAR_DIR or LOG_DIR if not exists
+if [ ! -d "$VAR_DIR" ]; then
+    mkdir -p $VAR_DIR
+fi
+if [ ! -d "$LOG_DIR" ]; then
+    mkdir -p $LOG_DIR
+fi
 
 # if PID file exits, exit
 check_pid() {

@@ -4,7 +4,7 @@
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 
-# dirs
+# dirs (relative paths are based on location of this script)
 VAR_DIR=.var
 
 # PID files of server and log rotation
