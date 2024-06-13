@@ -2,6 +2,8 @@
 
 A template with handy scripts to test and run programs as a daemon in the background, with `stdout` & `stderr` logs and log rotation built-in. The target program needs zero modification.
 
+Requires Python 3.6+ for log rotation.
+
 ## Setup
 
 > [!NOTE] 
@@ -14,12 +16,17 @@ A template with handy scripts to test and run programs as a daemon in the backgr
     ```bash
     # log directory
     LOG_DIR=logs
+    # --------------------
     # log file (will be rotated)
     LOG_PATH=$LOG_DIR/server.log
-    # log of log rotation script
-    ROTATE_FILE=$LOG_DIR/rotate.log
     # max log size in MB
     MAX_LOG_SIZE=5
+    # --------------------
+    # log file of log rotation script (will be rotated)
+    ROTATE_FILE=$LOG_DIR/rotate.log
+    # max log size for rotation output in MB
+    MAX_ROTATION_LOG_SIZE=5
+    # --------------------
     # python executable used to run log rotation script
     PYTHON_CMD=python
     # log rotation script
@@ -34,7 +41,7 @@ A template with handy scripts to test and run programs as a daemon in the backgr
 
 - both processes are run in the background with their PIDs stored in `.vars/server.pid` and `.vars/rotate.pid`, and they communicate using a fifo file `.vars/.fifo`. **Do NOT manually modify or delete these files.**
 - server logs are stored in `logs/server.log` and rotated every 5MB (can be changed in `startd.sh`)
-- rotation logs are stored in `logs/rotate.log`
+- rotation logs are stored in `logs/rotate.log` and rotated every 5MB (can be changed in `startd.sh`)
 
 `./statusd.sh`: Check the status of the command and the log rotation process running in the background.
 
