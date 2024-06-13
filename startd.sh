@@ -20,7 +20,7 @@ ROTATE_FILE=$LOG_DIR/rotate.log
 MAX_ROTATION_LOG_SIZE=5
 # ---
 # python executable used to run log rotation script
-PYTHON_CMD=python
+PYTHON_CMD=python3
 # log rotation script
 LOG_ROTATION_PY=rotatelog.py
 # -------- END SETTINGS --------
