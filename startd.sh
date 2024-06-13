@@ -4,19 +4,27 @@
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 
-# you may need to CHANGE THESE (relative paths are based on location of this script)
+######## BEGIN SETTINGS ########
+# Note: relative paths are based on location of this script
 # log directory
 LOG_DIR=logs
+# --------------------
 # log file (will be rotated)
 LOG_PATH=$LOG_DIR/server.log
-# log of log rotation script
-ROTATE_FILE=$LOG_DIR/rotate.log
 # max log size in MB
 MAX_LOG_SIZE=5
+# --------------------
+# log file of log rotation script (will be rotated)
+ROTATE_FILE=$LOG_DIR/rotate.log
+# max log size for rotation output in MB
+MAX_ROTATION_LOG_SIZE=5
+# --------------------
 # python executable used to run log rotation script
 PYTHON_CMD=python
 # log rotation script
 LOG_ROTATION_PY=rotatelog.py
+######## END SETTINGS ########
+
 
 # [!IMPORTANT] do not manually change these files
 # dir for PID files and other stuff
@@ -31,6 +39,12 @@ FIFO_PATH=$VAR_DIR/.fifo
 LIGHT_RED='\033[1;31m'
 LIGHT_CYAN='\033[1;36m'
 NC='\033[0m'
+
+# test if python is installed
+if ! command -v $PYTHON_CMD &> /dev/null; then
+    printf "${LIGHT_RED}Cannot run '$PYTHON_CMD'. Python is required for log rotation.${NC}\n"
+    exit 1
+fi
 
 # create VAR_DIR or LOG_DIR if not exists
 if [ ! -d "$VAR_DIR" ]; then
@@ -76,7 +90,8 @@ check_start_status() {
 }
 
 # start log rotation
-nohup $PYTHON_CMD -u $LOG_ROTATION_PY --fifo-path $FIFO_PATH --log-path $LOG_PATH --max-log-size $MAX_LOG_SIZE >> $ROTATE_FILE 2>&1 &
+nohup $PYTHON_CMD -u $LOG_ROTATION_PY --fifo-path $FIFO_PATH --log-path $LOG_PATH --max-log-size $MAX_LOG_SIZE \
+    --rotation-log-path $ROTATE_FILE --max-rotation-log-size $MAX_ROTATION_LOG_SIZE > /dev/null 2>&1 &
 # write PID to file
 echo $! > $PID_ROTATE_FILE
 # check if log rotation is running
