@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Change to the directory where the script is located
+# change to the directory where the script is located
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Change to the directory where the script is located
+# change to the directory where the script is located
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 
@@ -29,7 +29,7 @@ check() {
   # Read the process ID
   PID=$(cat $PID_FILE)
   # show process info
-  output=$(ps axo user,uid,pid,ppid,rss,stime,tty,time,command | awk -v pid=$PID 'NR==1 || $3 == pid || $4 == pid')
+  output=$(ps axo uid,user,pid,ppid,rss,stime,tty,time,command | awk -v pid=$PID 'NR==1 || $3 == pid || $4 == pid')
   line_count=$(echo "$output" | awk 'NR > 1' | wc -l)
   if [ $line_count -eq 0 ]; then
     printf "${LIGHT_RED}$PROCESS_NAME process is not running (should be at PID $PID)${NC}\n"

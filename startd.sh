@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Change to the directory where the script is located
+# change to the directory where the script is located
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 
@@ -44,7 +44,7 @@ check_pid() {
     local PID_FILE=$1
     local PROCESS_NAME=$2
     if [ -f "$PID_FILE" ]; then
-        printf "${LIGHT_RED}$PROCESS_NAME PID file $PID_FILE exists. $PROCESS_NAME process may still be running.${NC}\n"
+        printf "${LIGHT_RED}$PROCESS_NAME PID file $PID_FILE exists. $PROCESS_NAME process may still be running (run stopd.sh to stop it).${NC}\n"
         exit 1
     fi
 }

@@ -4,7 +4,7 @@
 CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 cd $CURRENT_DIR
 
-# optional: add custom setup here
+# optional: add custom setup here (change directory, activate virtual environment, etc.)
 
 
 # CHANGE THIS: the actual command you want to run
