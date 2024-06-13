@@ -50,12 +50,34 @@ def need_rotate(log_path, max_log_size):
 def rotate_log(log_path):
     current_time = datetime.now().strftime('.%Y%m%d-%H:%M:%S')
     new_name = log_path + current_time
-    make_file_dir(new_name)
     logger.info(f"Rotating {log_path} to {new_name}")
     if os.path.exists(new_name):
         logger.warning(f"{new_name} already exists, skip renaming")
     else:
+        make_file_dir(new_name)
         os.rename(log_path, new_name)
+
+def loop_to_log(bin_fd, log_path, max_log_size):
+    while True:  # loop once whenever need to rotate
+        with open(log_path, "ab") as log_file:
+            while True:
+                try:
+                    # read byte by byte in binary mode to avoid decoding 
+                    # error caused by utf8 character truncation
+                    byte = bin_fd.read(1)
+                    if byte:
+                        log_file.write(byte)
+                        log_file.flush()  # immediately write the content to the file
+                        # When a newline character is read, check if 
+                        # rotation is needed; if so, break the loop
+                        if byte == b'\n' and need_rotate(log_path, max_log_size):
+                            break
+                    else:
+                        logger.info(f"Read EOF, now closing...")
+                        return
+                except Exception as e:
+                    logger.exception(f"Exception in while loop: {e}")
+        rotate_log(log_path)  # rotate log file
 
 def catch_exception(func):
     def wrapper(*args, **kwargs):
@@ -68,35 +90,20 @@ def catch_exception(func):
 @catch_exception
 def main(fifo_path, log_path, max_log_size):
     logger.info(f"Process ID: {os.getpid()} start writing log files and rotating")
-    check_fifo(fifo_path)
-
-    make_file_dir(log_path)
-    with open(fifo_path, "rb") as fifo:
-        while True:  # loop once whenever need to rotate
-            with open(log_path, "ab") as log_file:
-                while True:
-                    try:
-                        # read byte by byte in binary mode to avoid decoding 
-                        # error caused by utf8 character truncation
-                        byte = fifo.read(1)
-                        if byte:
-                            log_file.write(byte)
-                            log_file.flush()  # immediately write the content to the file
-                            # When a newline character is read, check if 
-                            # rotation is needed; if so, break the loop
-                            if byte == b'\n' and need_rotate(log_path, max_log_size):
-                                break
-                        else:
-                            logger.info(f"Read EOF, now closing...")
-                            return
-                    except Exception as e:
-                        logger.exception(f"Exception in while loop: {e}")
-            rotate_log(log_path)  # rotate log file
+    if fifo_path:
+        logger.info(f"Reading from FIFO: {fifo_path}")
+        check_fifo(fifo_path)
+        make_file_dir(log_path)
+        with open(fifo_path, "rb") as fifo:
+            loop_to_log(fifo, log_path, max_log_size)
+    else:
+        logger.info("Reading from stdin")
+        loop_to_log(sys.stdin.buffer, log_path, max_log_size)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Log rotation utility")
-    parser.add_argument("--fifo-path", help="FIFO file path", required=True)
+    parser.add_argument("--fifo-path", help="FIFO file path; if not provided, read from stdin", default=None)
     parser.add_argument("--log-path", help="Log file path", required=True)
     parser.add_argument("--max-log-size", help="Max log file size (MB); 0 for no rotation", type=int, required=True)
     args = parser.parse_args()
