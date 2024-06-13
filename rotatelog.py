@@ -45,7 +45,7 @@ def check_fifo(fifo_path):
         raise ValueError(f"{fifo_path} does not exist")
 
 def need_rotate(log_path, max_log_size):
-    return os.path.getsize(log_path) > max_log_size
+    return os.path.getsize(log_path) >= max_log_size and max_log_size > 0
 
 def rotate_log(log_path):
     current_time = datetime.now().strftime('.%Y%m%d-%H:%M:%S')
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Log rotation utility")
     parser.add_argument("--fifo-path", help="FIFO file path", required=True)
     parser.add_argument("--log-path", help="Log file path", required=True)
-    parser.add_argument("--max-log-size", help="Max log file size (MB)", type=int, required=True)
+    parser.add_argument("--max-log-size", help="Max log file size (MB); 0 for no rotation", type=int, required=True)
     args = parser.parse_args()
     main(args.fifo_path, args.log_path, args.max_log_size * 1024 * 1024)
     logger.info("Process finished.")
