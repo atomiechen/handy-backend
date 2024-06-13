@@ -1,11 +1,30 @@
 # Handy Backend
 
-A template with handy scripts to test and run programs as a daemon in the background, with logs and log rotation built-in.
+A template with handy scripts to test and run programs as a daemon in the background, with `stdout` & `stderr` logs and log rotation built-in. The target program needs zero modification.
 
 ## Setup
 
-1. Use this template to create a new repository; or copy the scripts to your existing project.
-2. Open `start.sh` and modify `CMD` to set the command to run.
+> [!NOTE] 
+>
+> All relative paths are relative to the location of the scripts.
+
+1. Use this template to create a new repository; or copy the scripts to your existing project (any location is fine, but do place them together).
+2. Open `start.sh` and modify `CMD` to set the command to run. Add setup commands (change directory, activate virtual environment, etc.) if needed.
+3. (Optional) Modify `startd.sh` to change the logging and rotation settings.
+    ```bash
+    # log directory
+    LOG_DIR=logs
+    # log file (will be rotated)
+    LOG_PATH=$LOG_DIR/server.log
+    # log of log rotation script
+    ROTATE_FILE=$LOG_DIR/rotate.log
+    # max log size in MB
+    MAX_LOG_SIZE=5
+    # python executable used to run log rotation script
+    PYTHON_CMD=python
+    # log rotation script
+    LOG_ROTATION_PY=rotatelog.py
+    ```
 
 ## Usage
 
