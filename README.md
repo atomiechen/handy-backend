@@ -28,9 +28,13 @@ Requires Python 3.6+ for log rotation.
     MAX_ROTATION_LOG_SIZE=5
     # ---
     # python executable used to run log rotation script
-    PYTHON_CMD=python
+    PYTHON_CMD=python3
+    # current directory
+    CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
     # log rotation script
-    LOG_ROTATION_PY=rotatelog.py
+    LOG_ROTATION_PY=$CURRENT_DIR/rotatelog.py
+    # start script
+    START_SCRIPT=$CURRENT_DIR/start.sh
     ```
 
 ## Usage
