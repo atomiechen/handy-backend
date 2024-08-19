@@ -61,7 +61,7 @@ def need_rotate(log_path, max_log_size):
     return os.path.getsize(log_path) >= max_log_size and max_log_size > 0
 
 def rotate_log(log_path):
-    current_time = datetime.now().strftime('.%Y%m%d-%H:%M:%S')
+    current_time = datetime.now().strftime('.%Y%m%d-%H%M%S')
     new_name = log_path + current_time
     logger.info(f"Rotating {log_path} to {new_name}")
     if os.path.exists(new_name):
