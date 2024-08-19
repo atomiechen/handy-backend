@@ -50,6 +50,18 @@ if ! command -v $PYTHON_CMD &> /dev/null; then
     exit 1
 fi
 
+# check if log rotation script exists
+if [ ! -f "$LOG_ROTATION_PY" ]; then
+    printf "${LIGHT_RED}Log rotation script not found: $LOG_ROTATION_PY${NC}\n"
+    exit 1
+fi
+
+# check if start script exists
+if [ ! -f "$START_SCRIPT" ]; then
+    printf "${LIGHT_RED}Start script not found: $START_SCRIPT${NC}\n"
+    exit 1
+fi
+
 # create VAR_DIR or LOG_DIR if not exists
 if [ ! -d "$VAR_DIR" ]; then
     mkdir -p $VAR_DIR
