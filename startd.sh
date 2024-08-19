@@ -21,8 +21,12 @@ MAX_ROTATION_LOG_SIZE=5
 # ---
 # python executable used to run log rotation script
 PYTHON_CMD=python3
+# current directory
+CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
 # log rotation script
-LOG_ROTATION_PY=rotatelog.py
+LOG_ROTATION_PY=$CURRENT_DIR/rotatelog.py
+# start script
+START_SCRIPT=$CURRENT_DIR/start.sh
 # -------- END SETTINGS --------
 
 
@@ -39,10 +43,6 @@ FIFO_PATH=$VAR_DIR/.fifo
 LIGHT_RED='\033[1;31m'
 LIGHT_CYAN='\033[1;36m'
 NC='\033[0m'
-
-# change to the directory where the script is located
-CURRENT_DIR=$(dirname ${BASH_SOURCE[0]})
-cd $CURRENT_DIR
 
 # test if python is installed
 if ! command -v $PYTHON_CMD &> /dev/null; then
@@ -102,7 +102,7 @@ echo $! > $PID_ROTATE_FILE
 check_start_status $PID_ROTATE_FILE "Log rotation"
 
 # start server
-nohup ./start.sh >> $FIFO_PATH 2>&1 &
+nohup $START_SCRIPT >> $FIFO_PATH 2>&1 &
 # write PID to file
 echo $! > $PID_FILE
 # check if server is running
