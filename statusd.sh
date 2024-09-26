@@ -34,7 +34,17 @@ check() {
     printf "${LIGHT_RED}$PROCESS_NAME process is not running (should be at PID $PID)${NC}\n"
     return 1
   else
-    echo "$output"
+    # Highlight matching PIDs
+    highlighted_output=$(echo "$output" | awk -v color=${LIGHT_RED} -v normal=${NC} -v pid=$PID '{
+        if ($3 == pid) {
+            $3 = color $3 normal
+        }
+        if ($4 == pid) {
+            $4 = color $4 normal
+        }
+        print
+    }')
+    echo "$highlighted_output"
     printf "${LIGHT_CYAN}$PROCESS_NAME process is running with PID ${LIGHT_RED}$PID${NC}\n"
   fi
 }
