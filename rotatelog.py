@@ -21,7 +21,6 @@ class FixedSizeRotatingFileHandler(RotatingFileHandler):
     def doRollover(self):
         if self.stream:
             self.stream.close()
-            self.stream = None
         # Create timestamped filename for the rollover logs
         current_time = datetime.now().strftime('.%Y%m%d-%H:%M:%S')
         self.rotate(self.baseFilename, self.baseFilename + current_time)
